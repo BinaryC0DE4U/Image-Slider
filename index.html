@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Slider</title>
+    <link rel="icon" href="Slide.png" type="image/x-icon">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+        body { 
+            background: url('Img1.png') no-repeat center center/cover;
+            backdrop-filter: blur(10px);
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            transition: background 0.8s ease-in-out;
+        }
+        .slider-container { 
+            position: relative; 
+            width: 90%; 
+            max-width: 800px; 
+            overflow: hidden; 
+            border-radius: 10px; 
+            box-shadow: 0 5px 30px rgba(255, 255, 255, 0.838); 
+            background: rgba(0, 0, 0, 0.6); 
+        }
+        .slider { 
+            display: flex; 
+            position: relative;
+        }
+        .slide { 
+            min-width: 100%; 
+            opacity: 0; 
+            transform: scale(0.9); 
+            position: absolute;
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out;
+        }
+        .slide img { 
+            width: 100%; 
+            display: block; 
+            border-radius: 10px; 
+        }
+        .active-slide { 
+            opacity: 1; 
+            transform: scale(1); 
+            position: relative;
+        }
+
+        .prev, .next { 
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%); 
+            background: rgba(255, 255, 255, 0.5); 
+            color: black; 
+            border: none; 
+            padding: 10px; 
+            cursor: pointer; 
+            border-radius: 50%; 
+            font-size: 18px; 
+            transition: 0.3s; 
+        }
+        .prev { left: 10px; }
+        .next { right: 10px; }
+        .prev:hover, .next:hover { background: rgba(255, 255, 255, 0.8); }
+
+        .dots-container { 
+            text-align: center; 
+            padding: 10px; 
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 0 0 10px 10px;
+        }
+        .dot { 
+            height: 12px; 
+            width: 12px; 
+            margin: 5px; 
+            background-color: #bbb; 
+            border-radius: 50%; 
+            display: inline-block; 
+            transition: background-color 0.3s ease-in-out; 
+            cursor: pointer; 
+        }
+        .active { background-color: #ff0000; }
+
+        .connect-with-me {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
+        }
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 15px;
+            margin-bottom: 20px;
+        }
+        .social-icon {
+            text-decoration: none;
+            font-size: 30px;
+            color: white;
+            transition: transform 0.3s ease-in-out, color 0.3s ease-in-out;
+        }
+        .social-icon:hover {
+            color: #0e76a8;
+            transform: scale(1.2);
+        }
+
+        @media (max-width: 600px) {
+            .prev, .next { padding: 8px; font-size: 14px; }
+            .dot { height: 10px; width: 10px; }
+        }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
+</head>
+<body>
+    <div class="slider-container">
+        <div class="slider">
+            <div class="slide active-slide"><img src="Img1.png" alt="Image 1"></div>
+            <div class="slide"><img src="Img2.png" alt="Image 2"></div>
+            <div class="slide"><img src="Img3.png" alt="Image 3"></div>
+            <div class="slide"><img src="Img4.png" alt="Image 4"></div>
+            <div class="slide"><img src="Img5.png" alt="Image 5"></div>
+            <div class="slide"><img src="Img6.png" alt="Image 6"></div>
+            <div class="slide"><img src="Img7.png" alt="Image 7"></div>
+        </div>
+        <button class="prev">&#10094;</button>
+        <button class="next">&#10095;</button>
+        <div class="dots-container"></div>
+    </div>
+
+    <div class="connect-with-me">
+        <h3>To Connect With Me</h3>
+    </div>
+
+    <div class="social-links">
+        <a href="https://www.linkedin.com/in/mr-dhananjay-patil-0172902a2/" target="_blank" class="social-icon linkedin">
+            <i class="fa-brands fa-linkedin"></i>
+        </a>
+        <a href="https://github.com/BinaryC0DE4U" target="_blank" class="social-icon github">
+            <i class="fa-brands fa-github"></i>
+        </a>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll('.slide');
+        const prev = document.querySelector('.prev');
+        const next = document.querySelector('.next');
+        const dotsContainer = document.querySelector('.dots-container');
+        let index = 0;
+
+        slides.forEach((_, i) => {
+            let dot = document.createElement('span');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => moveToSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+
+        function moveToSlide(i) {
+            slides[index].classList.remove('active-slide');
+            index = i;
+            slides[index].classList.add('active-slide');
+            document.body.style.background = `url('${slides[index].querySelector('img').src}') no-repeat center center/cover`;
+            updateDots();
+        }
+
+        function updateDots() {
+            document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
+            document.querySelectorAll('.dot')[index].classList.add('active');
+        }
+
+        prev.addEventListener('click', () => moveToSlide(index > 0 ? index - 1 : slides.length - 1));
+        next.addEventListener('click', () => moveToSlide(index < slides.length - 1 ? index + 1 : 0));
+    </script>
+</body>
+</html>
